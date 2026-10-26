@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -18,16 +18,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Setup Gradle 8.5
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.5'
 
-      - name: Compile Debug APK
-        run: gradle assembleDebug --no-daemon
+      - name: Accept Android Licenses and Build APK
+        run: |
+          yes | sdkmanager --licenses || true
+          gradle assembleDebug --no-daemon
 
       - name: Upload Ready APK
         uses: actions/upload-artifact@v4
